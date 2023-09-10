@@ -29,36 +29,6 @@ def showSummary():
     club = [club for club in clubs if club['email'] == request.form['email']][0]
     return render_template('welcome.html',club=club,competitions=competitions)
 
-
-# @app.route('/book/<competition>/<club>')
-# def book(competition,club):
-#     foundClub = [c for c in clubs if c['name'] == club][0]
-#     foundCompetition = [c for c in competitions if c['name'] == competition][0]
-#     if foundClub and foundCompetition:
-#         return render_template('booking.html',club=foundClub,competition=foundCompetition)
-#     else:
-#         flash("Something went wrong-please try again")
-#         return render_template('welcome.html', club=club, competitions=competitions)
-
-# @app.route('/book/<competition>/<club>')
-# def book(competition, club):
-#     foundClub = [c for c in clubs if c['name'] == club]
-#     foundCompetition = [c for c in competitions if c['name'] == competition]
-
-#     # Vérifie si le club et la compétition existent
-#     if not foundClub or not foundCompetition:
-#         return jsonify({"message": "Something went wrong-please try again"}), 404
-
-#     foundClub = foundClub[0]
-#     foundCompetition = foundCompetition[0]
-
-#     # Vérifie si la compétition est terminée
-#     if foundCompetition.get('closed'):
-#         return jsonify({"message": "La compétition est terminée."}), 400
-
-#     # Si tout est bon, continuer normalement
-#     return render_template('booking.html', club=foundClub, competition=foundCompetition)
-
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
     foundClub = [c for c in clubs if c['name'] == club]

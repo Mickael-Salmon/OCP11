@@ -1,4 +1,12 @@
-﻿from server import app
+﻿import pytest
+from server import app
+
+@pytest.fixture
+def reset_total_places(clubs_list):
+    for club in clubs_list:
+        club['total_places'] = 0
+
+
 
 # Classe pour tester la réservation de moins de 12 places
 class TestLessThan12:
@@ -26,11 +34,11 @@ class TestMoreThan12OneTry:
 
     def test_more_than_12_one_try(self):
         with self.client:
-            response = self.client.post('/booking_route', data={'places': 13})
+            response = self.client.post('/purchasePlaces', data={'places': 13})
             assert response.status_code == 400
             # Autres assertions ici
 
-# Classe pour tester la réservation de plus de 12 places en plusieurs tentatives
+# Classe pour tester la réservation de plus de 12 places en plusieurs tentatives (méthode 1)
 class TestMoreThan12MultipleTry:
     client = app.test_client()
 
@@ -44,4 +52,31 @@ class TestMoreThan12MultipleTry:
             response2 = self.client.post('/booking_route', data={'places': 7})
             assert response2.status_code == 400
 
-            # Autres tentatives de réservation ici
+
+# Classe pour tester la réservation de plus de 12 places en plusieurs tentatives (méthode 2)
+class TestClubBookingLimit:
+    client = app.test_client()
+    def test_more_than_twelve_multiple_bookings(self):
+        # Première réservation de 6 places, devrait réussir
+        result1 = self.client.post(
+            "/purchasePlaces",
+            data={
+                "places": 6,
+                "club": self.club[0]["name"],
+                "competition": self.competition[0]["name"]
+            }
+        )
+        assert result1.status_code == 200
+        assert "Great-booking complete!" in result1.data.decode()
+
+        # Deuxième réservation de 7 places, devrait échouer car le total serait 13
+        result2 = self.client.post(
+            "/purchasePlaces",
+            data={
+                "places": 7,
+                "club": self.club[0]["name"],
+                "competition": self.competition[0]["name"]
+            }
+        )
+        assert result2.status_code == 400
+        assert "more than 12 places in a competition." in result2.data.decode()

@@ -119,6 +119,9 @@ def get_club_points(club_name):
         return jsonify({"message": "Club not found"}), 404
     return jsonify({"points": club[0]['points']})
 
+@app.route('/viewClubPoints')
+def view_club_points():
+    return render_template('club_points.html', clubs=clubs)
 
 
 # TODO: Add route for points display

@@ -55,6 +55,7 @@ def book(competition, club):
 
 
 @app.route('/purchasePlaces', methods=['POST'])
+@app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
     """Acheter des places pour une compétition donnée."""
     competition_name = request.form['competition']

@@ -124,8 +124,6 @@ def view_club_points():
     return render_template('club_points.html', clubs=clubs)
 
 
-# TODO: Add route for points display
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return render_template('login.html', form={'csrf_token': 'dummy'})
@@ -134,3 +132,4 @@ def login():
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
+

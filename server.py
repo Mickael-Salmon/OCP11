@@ -4,14 +4,14 @@ from datetime import datetime
 
 def loadClubs():
     with open('clubs.json') as c:
-         listOfClubs = json.load(c)['clubs']
-         return listOfClubs
+        listOfClubs = json.load(c)['clubs']
+        return listOfClubs
 
 
 def loadCompetitions():
     with open('competitions.json') as comps:
-         listOfCompetitions = json.load(comps)['competitions']
-         return listOfCompetitions
+        listOfCompetitions = json.load(comps)['competitions']
+        return listOfCompetitions
 
 
 app = Flask(__name__)
@@ -26,8 +26,16 @@ def index():
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    return render_template('welcome.html',club=club,competitions=competitions)
+    try:
+        club = [club for club in clubs if club['email'] == request.form['email']][0]
+        # ... (reste du code)
+    except IndexError:
+        if request.form['email'] == '':
+            flash("Please enter your email.", 'error')
+        else:
+            flash("No account related to this email.", 'error')
+        return render_template('index.html'), 401
+
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
@@ -53,18 +61,68 @@ def book(competition, club):
     # Si tout est bon, continuer normalement
     return render_template('booking.html', club=foundClub, competition=foundCompetition)
 
-
-@app.route('/purchasePlaces',methods=['POST'])
+@app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
-    competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-    club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+    """Acheter des places pour une compétition donnée."""
+    competition_name = request.form['competition']
+    club_name = request.form['club']
+    places_required = int(request.form['places'])
+
+    # Trouver le club et la compétition correspondants
+    competition = [c for c in competitions if c['name'] == competition_name][0]
+    club = [c for c in clubs if c['name'] == club_name][0]
+
+    # Initialisation du compteur de places réservées pour ce club et cette compétition
+    if 'total_places' not in club:
+        club['total_places'] = {}
+
+    # Si la compétition n'est pas déjà dans le compteur, initialisez à 0
+    if competition_name not in club['total_places']:
+        club['total_places'][competition_name] = 0
+
+    # Calculer le total des places réservées après cette réservation
+    total_places_after_this_booking = club['total_places'][competition_name] + places_required
+
+    # Calculer le coût total des places en points
+    total_cost = places_required * 3
+
+    # Vérifier si le club a suffisamment de points
+    if total_cost > int(club['points']):
+        flash("You don't have enough points to complete this booking.")
+        return render_template('welcome.html', club=club, competitions=competitions), 400
+
+    # Vérifier si la nouvelle réservation dépasse la limite de 12 places
+    if total_places_after_this_booking > 12:
+        flash('Cannot book more than 12 places in total for this competition')
+        return render_template('welcome.html', club=club, competitions=competitions), 400
+
+    # Si tout est bon, effectuer la réservation et mettre à jour le compteur
+    competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
+    club['total_places'][competition_name] = total_places_after_this_booking
+
+    # Déduire les points du club
+    club['points'] = int(club['points']) - total_cost
+
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
-# TODO: Add route for points display
+@app.route('/booking_route', methods=['POST'])
+def booking_route():
+    # Votre logique ici
+    return jsonify({"message": "Réservation réussie"}), 200
+
+@app.route('/getClubPoints/<club_name>', methods=['GET'])
+def get_club_points(club_name):
+    club = [c for c in clubs if c['name'] == club_name]
+    if not club:
+        return jsonify({"message": "Club not found"}), 404
+    return jsonify({"points": club[0]['points']})
+
+@app.route('/viewClubPoints')
+def view_club_points():
+    return render_template('club_points.html', clubs=clubs)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -74,3 +132,4 @@ def login():
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
+

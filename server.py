@@ -92,9 +92,10 @@ def purchasePlaces():
         return render_template('welcome.html', club=club, competitions=competitions), 400
 
     # Vérifier si la nouvelle réservation dépasse la limite de 12 places
+    # Vérifier si la nouvelle réservation dépasse la limite de 12 places
     if total_places_after_this_booking > 12:
         flash('Cannot book more than 12 places in total for this competition')
-        return render_template('welcome.html', club=club, competitions=competitions), 400
+        return render_template('booking_limit_reached.html'), 400
 
     # Si tout est bon, effectuer la réservation et mettre à jour le compteur
     competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
@@ -109,8 +110,28 @@ def purchasePlaces():
 
 @app.route('/booking_route', methods=['POST'])
 def booking_route():
-    # Votre logique ici
-    return jsonify({"message": "Réservation réussie"}), 200
+    places_required = int(request.form['places'])
+    competition_name = request.form.get('competition', 'Spring Festival')
+    club_name = request.form.get('club', 'Simply Lift')
+
+
+    # Trouver le club et la compétition correspondants
+    competition = [c for c in competitions if c['name'] == competition_name][0]
+    club = [c for c in clubs if c['name'] == club_name][0]
+
+    if 'total_places' not in club:
+        club['total_places'] = {}
+
+    if competition_name not in club['total_places']:
+        club['total_places'][competition_name] = 0
+
+    total_places_after_this_booking = club['total_places'][competition_name] + places_required
+
+    if total_places_after_this_booking > 12:
+        return jsonify({"message": "Cannot book more than 12 places in total for this competition"}), 400
+    else:
+        return jsonify({"message": "Réservation réussie"}), 200
+
 
 @app.route('/getClubPoints/<club_name>', methods=['GET'])
 def get_club_points(club_name):

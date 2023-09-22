@@ -4,8 +4,8 @@ from tools import load_clubs, load_competitions
 
 class LocustTestServer(HttpUser):
     wait_time = between(1, 5)  # Temps d'attente aléatoire entre 1 et 5 secondes entre les requêtes
-    competition = load_competitions()[0]  # Chargement de la première compétition depuis vos données
-    club = load_clubs()[0]  # Chargement du premier club depuis vos données
+    competition = load_competitions()[0]  # Chargement de la première compétition depuis les données
+    club = load_clubs()[0]  # Chargement du premier club depuis les données
 
     def on_start(self):
         # Effectue des actions de configuration initiale (peut être utilisé pour se connecter, etc.)
@@ -20,8 +20,7 @@ class LocustTestServer(HttpUser):
             f"/book/{self.competition['name']}/{self.club['name']}",
             name="Reserve Places"
         )
-        # Vous pouvez ajouter des assertions pour vérifier la réponse si nécessaire
-        # assert response.status_code == 200
+        assert response.status_code == 200
 
     @task
     def purchase_places(self):
@@ -35,8 +34,7 @@ class LocustTestServer(HttpUser):
             },
             name="Purchase Places"
         )
-        # Vous pouvez ajouter des assertions pour vérifier la réponse si nécessaire
-        # assert response.status_code == 200
+        assert response.status_code == 200
 
     @task
     def view_club_points(self):

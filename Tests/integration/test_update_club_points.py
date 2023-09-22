@@ -15,7 +15,7 @@ class TestUpdateClubPoints:
             }
         )
         assert response.status_code == 200
-        # Add assertions to verify club points are updated
+
 
 if __name__ == "__main__":
     pytest.main()

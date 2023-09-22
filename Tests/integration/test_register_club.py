@@ -14,7 +14,7 @@ class TestRegisterClub:
             }
         )
         assert response.status_code == 200
-        # Add assertions to verify club registration
+
 
 if __name__ == "__main__":
     pytest.main()

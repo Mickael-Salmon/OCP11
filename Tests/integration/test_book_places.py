@@ -16,7 +16,7 @@ class TestBookPlaces:
             }
         )
         assert response.status_code == 200
-        # Add assertions to verify place booking
+
 
 if __name__ == "__main__":
     pytest.main()

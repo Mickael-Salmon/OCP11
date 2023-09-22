@@ -6,10 +6,14 @@ def loadClubs():
     with open('clubs.json') as c:
         listOfClubs = json.load(c)['clubs']
         return listOfClubs
+        listOfClubs = json.load(c)['clubs']
+        return listOfClubs
 
 
 def loadCompetitions():
     with open('competitions.json') as comps:
+        listOfCompetitions = json.load(comps)['competitions']
+        return listOfCompetitions
         listOfCompetitions = json.load(comps)['competitions']
         return listOfCompetitions
 
@@ -26,6 +30,16 @@ def index():
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
+    try:
+        club = [club for club in clubs if club['email'] == request.form['email']][0]
+        # ... (reste du code)
+    except IndexError:
+        if request.form['email'] == '':
+            flash("Please enter your email.", 'error')
+        else:
+            flash("No account related to this email.", 'error')
+        return render_template('index.html'), 401
+
     try:
         club = [club for club in clubs if club['email'] == request.form['email']][0]
         # ... (reste du code)
@@ -61,6 +75,7 @@ def book(competition, club):
     # Si tout est bon, continuer normalement
     return render_template('booking.html', club=foundClub, competition=foundCompetition)
 
+@app.route('/purchasePlaces', methods=['POST'])
 @app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
     """Acheter des places pour une compétition donnée."""
@@ -132,4 +147,6 @@ def login():
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
+
+
 

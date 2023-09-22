@@ -124,7 +124,6 @@ def purchasePlaces():
 
 @app.route('/booking_route', methods=['POST'])
 def booking_route():
-    # Votre logique ici
     return jsonify({"message": "Réservation réussie"}), 200
 
 @app.route('/getClubPoints/<club_name>', methods=['GET'])

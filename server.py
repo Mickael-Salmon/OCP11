@@ -14,8 +14,6 @@ def loadCompetitions():
     with open('competitions.json') as comps:
         listOfCompetitions = json.load(comps)['competitions']
         return listOfCompetitions
-        listOfCompetitions = json.load(comps)['competitions']
-        return listOfCompetitions
 
 
 app = Flask(__name__)

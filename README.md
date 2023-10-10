@@ -34,9 +34,10 @@ Nous intervenons ici pour résoudre plusieurs bugs et dans l'ajout d'une fonctio
 
 ### Étapes initiales
 
-1.  Clonez et forkez le repo.
-2.  Exécutez `source venv/bin/activate` pour activer l'environnement virtuel.
-3.  Exécutez `export FLASK_APP=server.py` pour configurer Flask.
+1.  Nous avons fait un fork du repo initial.
+2.  Cloner ce repo sur votre machine.
+3.  Exécutez `source venv/bin/activate` pour activer l'environnement virtuel.
+4.  Exécutez `export FLASK_APP=server.py` pour configurer Flask.
 
 ### Dépendances
 

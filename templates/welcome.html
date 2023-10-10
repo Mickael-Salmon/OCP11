@@ -1,36 +1,54 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
     <title>Summary | GUDLFT Registration</title>
 </head>
+
 <body>
-        <h2>Welcome, {{club['email']}} </h2><a href="{{url_for('logout')}}">Logout</a>
+    <div class="container">
+        <div class="header">
+            <h2>Welcome, {{club['email']}}</h2>
+            <a href="{{url_for('logout')}}" class="logout-link">Logout</a>
+        </div>
 
-    {% with messages = get_flashed_messages()%}
-    {% if messages %}
-        <ul>
-       {% for message in messages %}
-            <li>{{message}}</li>
-        {% endfor %}
-       </ul>
-    {% endif%}
-    Points available: {{club['points']}}
-    <h3>Competitions:</h3>
-    <ul>
-        {% for comp in competitions%}
-        <li>
-            {{comp['name']}}<br />
-            Date: {{comp['date']}}</br>
-            Number of Places: {{comp['numberOfPlaces']}}
-            {%if comp['numberOfPlaces']|int >0%}
-            <a href="{{ url_for('book',competition=comp['name'],club=club['name']) }}">Book Places</a>
-            {%endif%}
-        </li>
-        <hr />
-        {% endfor %}
-    </ul>
-    {%endwith%}
+        <div class="points-info">
+            <span>Points available: </span><span class="points">{{club['points']}}</span>
+        </div>
 
+        <section class="competitions">
+            <h3>Open Competitions:</h3>
+            <ul>
+                {% for comp in present_competitions %}
+                <li class="competition-item">
+                    <span class="competition-name">{{comp['name']}}</span><br />
+                    Date: <span class="competition-date">{{comp['date']}}</span><br />
+                    Number of Places: <span class="competition-places">{{comp['numberOfPlaces']}}</span><br />
+                    {% if comp['numberOfPlaces']|int > 0 %}
+                    <a href="{{ url_for('book', competition=comp['name'], club=club['name']) }}" class="book-button">Book Places</a>
+                    {% endif %}
+                </li>
+                <hr>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="past-competitions">
+            <h3>Past Competitions:</h3>
+            <ul>
+                {% for comp in past_competitions %}
+                <li class="past-competition-item">
+                    {{comp['name']}}<br />
+                    Date: {{comp['date']}}<br />
+                    Booking closed.
+                </li>
+                <hr>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
 </body>
+
 </html>

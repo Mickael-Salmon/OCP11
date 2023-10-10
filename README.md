@@ -83,14 +83,53 @@ Exemple :
 ```
 pytest Tests/unitaires/test_booking_past_competitions.py
 ```
-```
 
-### Rapports
+
+# Rapports
 
 -   Un rapport de test est disponible à la fin de chaque phase.
 -   Un rapport de performance est également requis.
 
-```
+# Projet de gestion de compétitions
+
+## Phase 0
+
+- [x] **Besoins des secrétaires pour se connecter et visualiser leur solde de points actuel**
+  - Commentaire : Les secrétaires peuvent se connecter via leur adresse e-mail, mais il n'y a pas de mécanisme d'authentification fort.
+
+- [x] **Utiliser des points pour acheter des places d'accès rapide**
+  - Commentaire : Les secrétaires peuvent utiliser leurs points pour acheter des places.
+
+- [x] **Éviter la surréservation**
+  - Commentaire : Le code vérifie si suffisamment de places sont disponibles et si le club a assez de points.
+
+- [x] **Tableau indiquant les points pour tous les clubs**
+  - Commentaire : Il y a une route `/viewClubPoints` qui permet de voir les points de tous les clubs.
+
+## Phase 1
+
+- [x] **Utiliser leur adresse électronique pour se connecter et consulter la liste des compétitions à venir**
+  - Commentaire : Fonctionnalité accomplie.
+
+- [x] **Sélectionner une compétition et utiliser leurs points pour acheter des places**
+  - Commentaire : Fonctionnalité accomplie.
+
+- [x] **Message confirmant le nombre de places achetées ou indiquant que le concours est complet**
+  - Commentaire : Le message flash s'affiche pour confirmer ou refuser la transaction.
+
+- [x] **Ne pas pouvoir réserver plus de places que celles disponibles ou plus de 12 places dans une compétition**
+  - Commentaire : Fonctionnalité accomplie.
+
+- [x] **Les secrétaires des clubs pourront se déconnecter**
+  - Commentaire : La route `/logout` existe, mais elle ne fait que rediriger vers l'index qui ramène à une simple page de connexion nécessitant une adresse email.
+
+## Phase 2
+
+- [x] **Tableau public en lecture seule des totaux de points**
+  - Commentaire : Fonctionnalité accomplie via la route `/viewClubPoints`.
+
+- [x] **Réduire au minimum les temps de construction et de rendu**
+  - Commentaire : Le code est optimisé pour des opérations simples.
 
 # gudlift-registration
 

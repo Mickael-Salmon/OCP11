@@ -66,7 +66,7 @@ def book(competition, club):
         return jsonify({"message": "La compétition est terminée."}), 400
 
     # Vérifie si la date de la compétition est passée
-    competition_date = datetime.strptime(foundCompetition['date'], '%Y-%m-%d')
+    competition_date = datetime.strptime(foundCompetition['date'], '%Y-%m-%d %H:%M:%S')
     if competition_date < datetime.now():
         return jsonify({"message": "La compétition est terminée."}), 400
 

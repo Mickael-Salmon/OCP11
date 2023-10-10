@@ -12,13 +12,13 @@ class TestBookPastCompetition:
     competitions = [
         {
             "name": "Test Closed",
-            "date": "2020-01-01",
+            "date": "2020-01-01 00:00:00",
             "places": 10,
             "closed": True
         },
         {
             "name": "Test Open",
-            "date": "2024-01-01",
+            "date": "2024-01-01 00:00:00",
             "places": 10,
             "closed": False
         }

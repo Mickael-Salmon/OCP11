@@ -1,5 +1,5 @@
 ﻿import server
-from server import app
+from server import app, clubs, competitions
 
 class TestClubPointsUpdateAfterBooking:
     """

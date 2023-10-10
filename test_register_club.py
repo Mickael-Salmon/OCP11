@@ -7,7 +7,7 @@ class TestRegisterClub:
     def test_register_new_club(self):
         # Simulate registration of a new club
         response = self.client.post(
-            "/registerClub",
+            "/login",
             data={
                 "name": "New Club",
                 "email": "newclub@example.com"

@@ -58,24 +58,29 @@ places_booked = initialize_booked_places(competitions, clubs)
 def index():
     return render_template('index.html')
 
-@app.route('/showSummary', methods=['POST'])
+@app.route('/showSummary', methods=['GET', 'POST'])
 def show_summary():
-    try:
-        club = [club for club in clubs if club['email'] == request.form['email']][0]
-        print("Club trouvé : ", club)
-        return render_template(
-            'welcome.html',
-            club=club,
-            past_competitions=past_competitions,
-            present_competitions=present_competitions
-        )
-    except IndexError:
-        print("Entrée dans le bloc except")
-        if request.form['email'] == '':
-            flash("Please enter your email.", 'error')
-        else:
-            flash("No account related to this email.", 'error')
-        return render_template('index.html'), 401
+    if request.method == 'POST':
+        try:
+            club = [club for club in clubs if club['email'] == request.form['email']][0]
+            print("Club trouvé : ", club)
+            return render_template(
+                'welcome.html',
+                club=club,
+                past_competitions=past_competitions,
+                present_competitions=present_competitions
+            )
+        except IndexError:
+            print("Entrée dans le bloc except")
+            if request.form['email'] == '':
+                flash("Please enter your email.", 'error')
+            else:
+                flash("No account related to this email.", 'error')
+            return render_template('index.html'), 401
+    else:  # Cas pour GET et autres méthodes non-POST
+        flash("This route is not accessible via this method.", 'error')
+        return redirect(url_for('index'))
+
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
